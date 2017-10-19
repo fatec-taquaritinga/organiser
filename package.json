@@ -1,0 +1,75 @@
+{
+  "name": "organiser",
+  "version": "1.0.0",
+  "description": "An organic web framework for organized web servers.",
+  "keywords": [
+    "server",
+    "mvc",
+    "framework",
+    "web",
+    "rest",
+    "api",
+    "restful",
+    "static",
+    "serve",
+    "app",
+    "router",
+    "application",
+    "spring",
+    "boot",
+    "organiser",
+    "organizer",
+    "organic",
+    "organized",
+    "promise",
+    "async",
+    "await",
+    "express"
+  ],
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "babel src --out-dir dist",
+    "test": "echo \"Error: no tests specified yet. (WIP)\" && exit 1"
+  },
+  "author": "Arthur A. Bergamaschi <arthurbergmz@gmail.com>",
+  "license": "MIT",
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fatec-taquaritinga/organiser.git"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-regenerator": "^6.24.1",
+    "babel-preset-env": "^1.5.1",
+    "eslint": "^4.4.0",
+    "standard": "^10.0.3"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "bytes": "^2.5.0",
+    "colors": "^1.1.2",
+    "mime": "^1.3.6",
+    "urlencode": "^1.1.0",
+    "uuid": "^3.1.0"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "files": [
+    "dist",
+    "typings",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "index.js",
+    "index.d.ts",
+    "package.json"
+  ]
+}
