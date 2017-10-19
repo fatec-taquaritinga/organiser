@@ -8,8 +8,8 @@ export default function (options = {}) {
       rawParser(context)
         .then(content => {
           const contentType = context.headers['content-type']
-          const body = contentType ? parsers.parseFromContentType(contentType, content.rawBody, options) : parsers.parse(content.rawBody, options)
-          resolve({ body })
+          context.body = contentType ? parsers.parseFromContentType(contentType, content.rawBody, options) : parsers.parse(content.rawBody, options)
+          resolve()
         })
         .catch(err => {
           reject(err)

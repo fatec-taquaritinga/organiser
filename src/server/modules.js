@@ -91,22 +91,14 @@ export default class ModulesChain {
   }
 
   async execute (context) {
-    let res = null
+    if (this.length === 0) return
+    let res
     let i = -1
     let j
-    while ((j = this[++i]) !== undefined) {
+    while (!res && (j = this[++i]) !== undefined) {
       if (j) {
         const response = await (j.resolve || j.original)(context)
-        if (response) {
-          if (response instanceof Response) {
-            res = response
-            break
-          } else if (typeof response === 'object') {
-            utils.iterate(Object.keys(response), (property) => {
-              context[property] = response[property]
-            })
-          }
-        }
+        if (response && response instanceof Response) res = response
       }
     }
     return res

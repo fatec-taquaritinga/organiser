@@ -103,7 +103,7 @@ export function resolveInstance (instance, args) {
   let arg = instances[instance] // retrieve cached instance
   if (!arg) {
     try {
-      arg = args ? instance(args) : instance() // call synchronous function when it has arguments to be injected, otherwise, just pass function by reference
+      arg = args ? instance(args) : instance()
     } catch (exception) {
       const msg = exception.message
       if (msg === 'Cannot call a class as a function' || msg.substring(msg.length - 31) === 'cannot be invoked without \'new\'') {

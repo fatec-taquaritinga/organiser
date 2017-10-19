@@ -5,6 +5,7 @@ import debug from '../debug'
 import defaultOptions from './defaultOptions'
 import Router from './router'
 import { EventBus, EventType } from '../events'
+import Exceptions from '../exceptions'
 
 export const ServerStatus = {
   SERVER_CLOSE: 'SERVER_CLOSE',
@@ -21,8 +22,35 @@ export class Server {
     this._router = new Router(this)
     this._status = ServerStatus.SERVER_CLOSE
     this._nodeServer = this._options.https ? https.createServer(this._options.https) : http.createServer()
-    this._nodeServer.on('request', (request, response) => {
-      this._router.resolveRoute(Object.create({ instance: this, request, response, timing: process.hrtime() }))
+    this._nodeServer.on('request', (req, res) => {
+      const a = this
+      const b = process.hrtime()
+      this._router.resolveRoute({
+        set instance (instance) {
+          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the server instance of a request.')
+        },
+        get instance () {
+          return a
+        },
+        set request (request) {
+          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the request object.')
+        },
+        get request () {
+          return req
+        },
+        set response (response) {
+          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the response object.')
+        },
+        get response () {
+          return res
+        },
+        set timing (timing) {
+          throw new Exceptions.OPERATION_NOT_ALLOWED('This is not a DeLorean, Doc...')
+        },
+        get timing () {
+          return b
+        }
+      })
     })
   }
 

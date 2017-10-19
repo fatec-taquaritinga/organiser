@@ -37,10 +37,14 @@ export function extractPathParams (path, input, pathMatcher) {
 }
 
 export function extractHeaders (request) {
-  const headers = request.headers
-  const response = {}
-  for (let header in headers) response[header.toLowerCase()] = headers[header]
-  return response
+  return new Promise((resolve) => {
+    const headers = request.headers
+    const response = {}
+    utils.iterate(Object.keys(headers), (header) => {
+      response[header.toLowerCase()] = headers[header]
+    })
+    resolve(response)
+  })
 }
 
 export function generateRouteMatcher (prefix, path) {

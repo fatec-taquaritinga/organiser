@@ -56,7 +56,7 @@ declare module 'organiser' {
     static redirect: (uri: string) => ResponseBuilder;
     static serverError: (mediaType?: string) => ResponseBuilder;
     static status: (status: number) => ResponseBuilder;
-    static static: (file: | string, mediaType?: string) => ResponseBuilder;
+    static static: (file: | string, options?: Response.StaticOptions) => ResponseBuilder;
     static Status: HttpStatus;
     static MediaType: MediaType;
   }
@@ -186,6 +186,15 @@ declare module 'organiser' {
     interface RouterModules {
       after(...modules: ((context) => void)[]): RouterModules;
       before(...modules: ((context) => void)[]): RouterModules;
+    }
+
+  }
+
+  namespace Response {
+
+    interface StaticOptions {
+      timeout?: number;
+      mediaType?: MediaType;
     }
 
   }

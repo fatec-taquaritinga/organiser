@@ -39,7 +39,11 @@ export default function (options = {}) {
         if (done) return
         done = true
         onClose()
-        resolve(length !== null && length !== size ? Response.status(400).build() : { rawBody: Buffer.concat(raw).toString() })
+        if (length !== null && length !== size) {
+          resolve(Response.status(400).build())
+        } else {
+          context.rawBody = Buffer.concat(raw).toString()
+        }
       }
       function onClose () {
         request.removeListener('error', onError)

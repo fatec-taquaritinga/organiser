@@ -7,10 +7,10 @@ export { MediaType, HttpStatus }
 
 export class ResponseBuilder {
   constructor (statusCode, mediaType, entity) {
-    this.status = statusCode
-    this.entity = entity
+    this._status = statusCode
+    this._entity = entity
     this._encoding = 'utf8'
-    this.headers = {
+    this._headers = {
       'Content-Type': mediaType
     }
   }
@@ -20,33 +20,33 @@ export class ResponseBuilder {
   }
 
   status (status) {
-    this.status = status
+    this._status = status
     return this
   }
 
   entity (entity) {
-    this.entity = entity
+    this._entity = entity
     return this
   }
 
   type (mediaType) {
-    this.headers['Content-Type'] = mediaType
+    this._headers['Content-Type'] = mediaType
     return this
   }
 
   cookie (...cookies) {
-    if (!this.headers['Set-Cookie']) this.headers['Set-Cookie'] = []
-    this.headers['Set-Cookie'].push(...cookies)
+    const arr = this._headers['Set-Cookie'] || (this._headers['Set-Cookie'] = [])
+    arr.push(...cookies)
     return this
   }
 
   expires (date = new Date()) {
-    this.headers['Expires'] = date.toUTCString()
+    this._headers['Expires'] = date.toUTCString()
     return this
   }
 
   lastModified (date = new Date()) {
-    this.headers['Last-Modified'] = date.toUTCString()
+    this._headers['Last-Modified'] = date.toUTCString()
     return this
   }
 
@@ -56,7 +56,7 @@ export class ResponseBuilder {
   }
 
   header (key, value) {
-    this.headers[key] = value
+    this._headers[key] = value
     return this
   }
 }
@@ -64,11 +64,11 @@ export class ResponseBuilder {
 export class Response {
   constructor (responseBuilder) {
     this.body = {
-      status: responseBuilder.status,
-      entity: responseBuilder.entity,
+      status: responseBuilder._status,
+      entity: responseBuilder._entity,
       encoding: responseBuilder._encoding
     }
-    this.header = responseBuilder.headers
+    this.header = responseBuilder._headers
   }
 
   edit () {
@@ -76,8 +76,9 @@ export class Response {
   }
 
   static fromResponse (response) {
-    const builder = new ResponseBuilder(response.body.status, MediaType.APPLICATION_JSON, JSON.parse(JSON.stringify(response.body.entity))) // is deep clone really necessary?
-    builder.headers = JSON.parse(JSON.stringify(response.header)) // is deep clone really necessary?
+    const entity = response.body.entity
+    const builder = new ResponseBuilder(response.body.status, MediaType.APPLICATION_JSON, typeof entity === 'object' ? JSON.parse(JSON.stringify(entity)) : entity) // is deep clone really necessary?
+    builder._headers = JSON.parse(JSON.stringify(response.header)) // is deep clone really necessary?
     builder._encoding = response._encoding
     return builder
   }
@@ -114,8 +115,8 @@ export class Response {
     return new ResponseBuilder(status, MediaType.APPLICATION_JSON, null)
   }
 
-  static async static (file) {
-    const response = await serveStatic(file)
+  static static (file, options) {
+    const response = serveStatic(file, options)
     return new ResponseBuilder(response.statusCode, response.mediaType, response.content)
   }
 
