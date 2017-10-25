@@ -17,13 +17,13 @@
 
 ---
 
-_**Organi**ser_ is a web framework focused on provinding the best developing and maintenance experience, benefiting from Ecmascript's new definitions, with support from [Babel](https://babeljs.io/).
+_**Organi**ser_ is a next-generation web framework, focused on provinding the best developing and maintenance experience, benefiting from Ecmascript's new definitions, with support from [Babel](https://babeljs.io/).
 
 Our goal is having an **organi**zed and **organi**c **ser**ver. But what does that mean?
 
-It means that you can bring complex highly scalable systems to life, with easy maintaining, without having to learn hard syntaxes. It is organized because of its well-known syntax, used in Spring Boot, for example, and it is organic because Organise makes sense: it is just like telling the server what it should do, in almost natural-like language.
+It means that you can bring complex highly scalable systems to life, with easy maintaining, without having to learn hard syntaxes. It is organized because of its well-known syntax, used in Spring Boot, for example, and it is organic because Organiser makes sense: it is just like telling the server what it should do, in almost natural-like language.
 
-Organiser works with _inversion of control_ principles, creating one of the most powerful environments for MVC development in Node.js, for example. Just tell what you want through its _decorators_ and let the magic happen.
+Organiser works with _inversion of control_ principles, creating one of the most powerful environments for MVC development, for example, in Node.js. Just tell what you want through its _decorators_ and let the magic happen.
 
 ---
 
@@ -324,4 +324,4 @@ Licensed under [MIT](https://github.com/fatec-taquaritinga/organiser/blob/master
 
 ---
 
-_**Disclaimer:** Organiser is still a work in progress. Methods and behavior can change along the way._
+> _**Disclaimer:** Organiser is still a work in progress. Methods and behavior can change along the way._
