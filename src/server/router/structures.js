@@ -51,7 +51,3 @@ export class StaticRoutes {
     return handlers ? handlers[method] : null
   }
 }
-
-export function generatePath (prefix, path) {
-  return (path === '/' ? `/${prefix}` : `/${prefix}/${path}`).replace(/\/+/g, '/')
-}

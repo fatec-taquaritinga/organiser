@@ -3,7 +3,7 @@ import https from 'https'
 
 import debug from '../debug'
 import defaultOptions from './options'
-import Router from './router'
+import { Router } from './router'
 import { EventBus, EventType } from '../events'
 import { createFlowModifiers, returnFlowModifiers } from './flow/modifier'
 import { Response } from '../response'
@@ -27,7 +27,7 @@ export class Server {
     this.options = isNaN(options) ? options : { port: options }
     this._modifiers = createFlowModifiers()
     this._eventBus = new EventBus()
-    this._router = new Router(this)
+    this._router = new Router()
     this._status = ServerStatus.SERVER_CLOSE
     this._nodeServer = this._options.https ? https.createServer(this._options.https, requestHandler) : http.createServer(requestHandler)
     this._nodeServer.on('clientError', this.onClientError)

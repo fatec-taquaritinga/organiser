@@ -2,7 +2,7 @@ import iterate from './functions/iterate'
 import isRequired from './functions/isRequired'
 import parseHeaders from './functions/parseHeaders'
 
-export default {
+export {
   iterate,
   isRequired,
   parseHeaders
