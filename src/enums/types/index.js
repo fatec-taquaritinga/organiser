@@ -1,4 +1,4 @@
-import Exceptions from '../../exceptions'
+import { TypeAlreadyExistsException } from '../../exceptions'
 import uuid from './uuid'
 import string from './string'
 import boolean from './boolean'
@@ -35,7 +35,7 @@ function registerCustomType (propertyName, typeName, typeConverter) {
   if (!typeConverter && typeof typeName === 'object') return registerCustomType(propertyName, propertyName, typeName)
   if (propertyName && typeName && typeConverter && typeConverter.test && typeConverter.test.length === 1 && typeConverter.exec && typeConverter.exec.length === 1) {
     propertyName = propertyName.toUpperCase()
-    if (Types[propertyName]) throw new Exceptions.TYPE_ALREADY_EXISTS(`${propertyName} is already registered.`)
+    if (Types[propertyName]) throw new TypeAlreadyExistsException(`${propertyName} is already registered.`)
     Types[propertyName] = typeName
     types[typeName] = typeConverter
     return true

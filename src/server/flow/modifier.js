@@ -64,7 +64,7 @@ export function returnFlowModifiers (parent, children) {
   }
 }
 
-export class FlowModifier {
+class FlowModifier {
   constructor (...modifiers) {
     this.length = 0
     let i = -1
@@ -156,12 +156,14 @@ export class FlowModifier {
   }
 
   async execute (context, r) {
-    let response
-    let i = -1
-    let modifier
-    while ((response === undefined) && (modifier = this[++i])) {
-      response = await modifier(context, r)
+    if (this.length > 0) {
+      let response
+      let i = -1
+      let modifier
+      while ((response === undefined) && (modifier = this[++i])) {
+        response = await modifier(context, r)
+      }
+      return response
     }
-    return response
   }
 }

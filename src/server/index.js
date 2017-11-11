@@ -44,7 +44,9 @@ export class Server {
   }
 
   onClientError (err, socket) {
-    console.error(err)
+    if (err) {
+      debug.log.error(err)
+    }
     socket.end()
   }
 

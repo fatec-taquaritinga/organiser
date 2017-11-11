@@ -1,6 +1,6 @@
 import debug from '../debug'
-import utils from '../utils'
-import { createFlowModifiers, FlowModifier } from '../server/flow/modifier'
+import { iterate, isRequired } from '../utils'
+import { createFlowModifiers } from '../server/flow/modifier'
 
 const instances = {}
 
@@ -49,6 +49,7 @@ export function handleHttpMethod (target, property, descriptor, method) {
 }
 
 export function handlePath (target, property, descriptor, path) {
+  if (path === undefined) isRequired('path')
   debug.assert.exists(target, target.name || target)
   debug.assert.is(typeof path, 'string', 'Path must be a string.')
   if (descriptor) { // class functions
@@ -60,6 +61,7 @@ export function handlePath (target, property, descriptor, path) {
 }
 
 export function handleArguments (target, property, descriptor, args) {
+  if (args.length === 0) isRequired('args')
   debug.assert.exists(target, target.name || target)
   if (descriptor) { // class functions - model definition
     const persistence = persistMethods(persist(target), property)
@@ -72,10 +74,11 @@ export function handleArguments (target, property, descriptor, args) {
 }
 
 export function handleModules (target, property, descriptor, modules, before) {
+  if (modules.length === 0) isRequired('modules')
   debug.assert.exists(target, target.name || target)
   const mods = persistModules(descriptor ? persistMethods(persist(target), property) : persist(target))
   const chain = before ? mods.before : mods.after
-  utils.iterate(modules, (mod) => {
+  iterate(modules, (mod) => {
     chain.push(mod)
   })
 }
@@ -85,7 +88,7 @@ export function resolveArgumentsInjection (object) {
   const injections = persistence ? persistence.constructor : null
   const constructorArguments = []
   if (injections && Array.isArray(injections)) {
-    utils.iterate(injections, (arg) => {
+    iterate(injections, (arg) => {
       const args = resolveArgumentsInjection(arg)
       if (args.length === 0) { // end of injections
         constructorArguments.push(typeof arg === 'function' ? resolveInstance(arg) : arg) // try to resolve function or class, or use raw value
