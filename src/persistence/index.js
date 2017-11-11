@@ -1,6 +1,6 @@
 import debug from '../debug'
 import utils from '../utils'
-import ModulesChain from '../server/modules'
+import { createFlowModifiers, FlowModifier } from '../server/flow/modifier'
 
 const instances = {}
 
@@ -31,7 +31,7 @@ function persistMethods (persistence, property) {
 }
 
 function persistModules (persistence) {
-  return persistence.modules || (persistence.modules = { after: new ModulesChain(), before: new ModulesChain() })
+  return persistence.modules || (persistence.modules = createFlowModifiers())
 }
 
 export function retrieve (target) {
@@ -76,7 +76,7 @@ export function handleModules (target, property, descriptor, modules, before) {
   const mods = persistModules(descriptor ? persistMethods(persist(target), property) : persist(target))
   const chain = before ? mods.before : mods.after
   utils.iterate(modules, (mod) => {
-    chain.register(mod)
+    chain.push(mod)
   })
 }
 

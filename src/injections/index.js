@@ -1,32 +1,31 @@
+import 'babel-polyfill'
 import { Types, transform } from '../enums/types'
 import { ParamTypes } from '../enums/paramTypes'
-import { extractPathParams } from '../server/utils'
-import { handleArguments } from '../persistence'
 
-export function resolveRequestArguments (context) {
-  return new Promise((resolve) => {
-    const route = context.route
-    const resolver = route.resolver
-    const method = resolver.persistence[resolver.method]
-    const requestedArgs = method.args
-    if (requestedArgs && Object.keys(requestedArgs).length > 0) {
-      resolveModel(requestedArgs, method.strict, {
-        path: extractPathParams(route.path, context.url.input, route.matcher),
-        query: context.url.parsed.query,
-        body: context.body || {},
-        context
-      }, null, resolve)
-    } else {
-      resolve(null)
-    }
-  })
+export const resolveRequestArguments = function (context, resolver, params) {
+  const data = context.data
+  const method = resolver.persistence[resolver.method]
+  const requestedArgs = method.args
+  if (requestedArgs && Object.keys(requestedArgs)[0] !== undefined) {
+    const resolve = resolveModel(requestedArgs, method.strict, {
+      path: params,
+      query: data.query,
+      body: data.body || {},
+      context
+    }, null)
+    return resolve
+  }
 }
 
-function resolveModel (model, strictMode, data, parentWhere = null, resolve = null) {
+function resolveModel (model, strictMode, data, parentWhere = null) {
   // TODO strict mode
   // + needs to check inner models
   const response = {}
-  for (let property in model) {
+  const modelKeys = Object.keys(model)
+  let i = -1
+  let propertyName
+  let property
+  while ((propertyName = modelKeys[++i]) && (property = model[propertyName])) {
     const propertyValue = model[property]
     const parameter = retrieveParameter(property, propertyValue, data, parentWhere)
     let value = retrieveParameterAt(property, parameter.where, data, parameter.defaultValue)
@@ -66,16 +65,13 @@ function resolveModel (model, strictMode, data, parentWhere = null, resolve = nu
     } else if ((parameter.type === Types.CLIENT_REQUEST || parameter.type === Types.SERVER_RESPONSE) && !value) {
       value = transform(data.context, parameter.type)
     }
-    const propertyResponse = isValidValue(value) ? value : (value || null) // if value is undefined or null and not optional, we keep it as null
-    if (propertyResponse !== null && !parameter.isOptinal) {
-      response[property] = propertyResponse
+    if (value === undefined && !parameter.isOptinal) {
+      throw new Error('Value is not optional.')
+    } else {
+      response[property] = value
     }
   }
-  if (resolve) {
-    resolve(response)
-  } else {
-    return response
-  }
+  return response
 }
 
 function isValidValue (value) {

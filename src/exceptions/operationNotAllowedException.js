@@ -1,4 +1,7 @@
-export default function (message) {
-  this.name = 'OperationNotAllowedException'
-  this.message = message
+import GenericServerException from './genericServerException'
+
+export default class OperationNotAllowedException extends GenericServerException {
+  constructor (message) {
+    super('OperationNotAllowedException', message)
+  }
 }

@@ -5,7 +5,7 @@ import serveStatic from './static'
 
 export { MediaType, HttpStatus }
 
-export class ResponseBuilder {
+class ResponseBuilder {
   constructor (statusCode, mediaType, entity) {
     this._status = statusCode
     this._entity = entity

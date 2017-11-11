@@ -1,4 +1,7 @@
-export default function (message) {
-  this.name = 'NotInArrayException'
-  this.message = message
+import GenericServerException from './genericServerException'
+
+export default class NotInArrayException extends GenericServerException {
+  constructor (message) {
+    super('NotInArrayException', message)
+  }
 }

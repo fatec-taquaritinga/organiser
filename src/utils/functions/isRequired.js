@@ -1,5 +1,5 @@
-import Exceptions from '../../exceptions'
+import { MissingArgumentException } from '../../exceptions'
 
 export default function (argumentName) {
-  throw new Exceptions.MISSING_ARGUMENT(`"${argumentName}" is required.`)
+  throw new MissingArgumentException(`"${argumentName}" is required.`)
 }

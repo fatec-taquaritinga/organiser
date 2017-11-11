@@ -5,7 +5,9 @@ import debug from '../debug'
 import defaultOptions from './defaultOptions'
 import Router from './router'
 import { EventBus, EventType } from '../events'
-import Exceptions from '../exceptions'
+import { createFlowModifiers, returnFlowModifiers } from './flow/modifier'
+import { Response } from '../response'
+import { flow } from './flow'
 
 export const ServerStatus = {
   SERVER_CLOSE: 'SERVER_CLOSE',
@@ -16,42 +18,34 @@ export const ServerStatus = {
 
 export class Server {
   constructor (options) {
+    const requestHandler = (request, response) => {
+      request.on('finish', this.onResponseFinished)
+      request.on('error', this.onResponseFinished)
+      flow(this, request, response, process.hrtime())
+    }
     this._start = process.hrtime()
     this.options = isNaN(options) ? options : { port: options }
-    this._eventBus = new EventBus(this)
+    this._modifiers = createFlowModifiers()
+    this._eventBus = new EventBus()
     this._router = new Router(this)
     this._status = ServerStatus.SERVER_CLOSE
-    this._nodeServer = this._options.https ? https.createServer(this._options.https) : http.createServer()
-    this._nodeServer.on('request', (req, res) => {
-      const a = this
-      const b = process.hrtime()
-      this._router.resolveRoute({
-        set instance (instance) {
-          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the server instance of a request.')
-        },
-        get instance () {
-          return a
-        },
-        set request (request) {
-          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the request object.')
-        },
-        get request () {
-          return req
-        },
-        set response (response) {
-          throw new Exceptions.OPERATION_NOT_ALLOWED('You can\'t change the response object.')
-        },
-        get response () {
-          return res
-        },
-        set timing (timing) {
-          throw new Exceptions.OPERATION_NOT_ALLOWED('This is not a DeLorean, Doc...')
-        },
-        get timing () {
-          return b
-        }
-      })
-    })
+    this._nodeServer = this._options.https ? https.createServer(this._options.https, requestHandler) : http.createServer(requestHandler)
+    this._nodeServer.on('clientError', this.onClientError)
+  }
+
+  _onEndpointNotFound () {
+    return Response.notFound().build()
+  }
+
+  onResponseFinished (i) {
+    console.log('onResponseFinished')
+    console.log('this:', this)
+    console.log('i:', i)
+  }
+
+  onClientError (err, socket) {
+    console.error(err)
+    socket.end()
   }
 
   get status () {
@@ -66,59 +60,17 @@ export class Server {
     this._options = Object.assign(defaultOptions, options || {})
   }
 
+  use (...apps) {
+    return returnFlowModifiers(this, null).before(apps)
+  }
+
   modules (...modules) {
     return this._router.modules(modules)
   }
 
   routes (...routes) {
     routes = routes.length > 0 ? this._router.register(routes) : null
-    const router = this._router
-    return {
-      after (...modules) {
-        const len = modules.length
-        if (routes) {
-          for (let route of routes) {
-            if (len === 2 && !isNaN(routes[0])) {
-              route.modules.after.register(routes[0], routes[1])
-            } else {
-              for (let mod of modules) route.modules.after.register(mod)
-            }
-          }
-        } else {
-          if (len === 2 && !isNaN(routes[0])) {
-            router._modules.after.register(routes[0], routes[1])
-          } else {
-            for (let mod of modules) router._modules.after.register(mod)
-          }
-        }
-        return this
-      },
-      before (...modules) {
-        const len = modules.length
-        if (routes) {
-          for (let route of routes) {
-            if (len === 2 && !isNaN(routes[0])) {
-              route.modules.before.register(routes[0], routes[1])
-            } else {
-              let index = len
-              while (--index >= 0) {
-                route.modules.before.register(0, modules[index])
-              }
-            }
-          }
-        } else {
-          if (len === 2 && !isNaN(routes[0])) {
-            router._modules.before.register(routes[0], routes[1])
-          } else {
-            let index = len
-            while (--index >= 0) {
-              router._modules.before.register(0, modules[index])
-            }
-          }
-        }
-        return this
-      }
-    }
+    return returnFlowModifiers(this._router, routes)
   }
 
   set isRunning (isRunning) {

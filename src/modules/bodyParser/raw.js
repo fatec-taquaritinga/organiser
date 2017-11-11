@@ -11,8 +11,7 @@ export default function (options = {}) {
   }, options)
   const length = bytes.parse(options.length)
   const limit = bytes.parse(options.limit)
-  return (context) => {
-    const request = context.request
+  return ({ request }) => {
     return new Promise((resolve, reject) => {
       let done = false
       let size = 0
@@ -42,7 +41,8 @@ export default function (options = {}) {
         if (length !== null && length !== size) {
           resolve(Response.status(400).build())
         } else {
-          context.rawBody = Buffer.concat(raw).toString()
+          const result = Buffer.concat(raw).toString()
+          resolve(result || undefined)
         }
       }
       function onClose () {

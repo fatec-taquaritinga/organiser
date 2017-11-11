@@ -4,12 +4,17 @@ import parsers from './parsers'
 export default function (options = {}) {
   const rawParser = raw(options)
   return function (context) {
-    return new Promise((resolve, reject) => {
+    return new Promise(function (resolve, reject) {
       rawParser(context)
-        .then(content => {
-          const contentType = context.headers['content-type']
-          context.body = contentType ? parsers.parseFromContentType(contentType, content.rawBody, options) : parsers.parse(content.rawBody, options)
-          resolve()
+        .then((content) => {
+          const { data } = context
+          if (typeof content !== 'string') {
+            const contentType = data.headers['content-type']
+            data.body = contentType ? parsers.parseFromContentType(contentType, content, options) : parsers.parse(content, options)
+            resolve()
+          } else {
+            resolve(content)
+          }
         })
         .catch(err => {
           reject(err)

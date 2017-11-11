@@ -1,6 +1,6 @@
-import { iterate } from '../utils'
+import iterate from './iterate'
 
-export function extractHeaders ({ headers }) {
+export default function (headers) {
   const response = {}
   iterate(Object.keys(headers), (header) => {
     response[header.toLowerCase()] = headers[header]

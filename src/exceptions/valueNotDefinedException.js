@@ -1,4 +1,7 @@
-export default function (message) {
-  this.name = 'ValueNotDefinedException'
-  this.message = message
+import GenericServerException from './genericServerException'
+
+export default class ValueNotDefinedException extends GenericServerException {
+  constructor (message) {
+    super('ValueNotDefinedException', message)
+  }
 }

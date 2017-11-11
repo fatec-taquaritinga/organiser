@@ -1,21 +1,23 @@
+import genericServerException from './genericServerException'
 import valueNotDefinedException from './valueNotDefinedException'
 import numberFormatException from './numberFormatException'
 import notInArrayException from './notInArrayException'
 import notInObjectException from './notInObjectException'
 import unexpectedValueException from './unexpectedValueException'
 import typeAlreadyExistsException from './typeAlreadyExistsException'
-import missingArgumentException from './missingArgument'
-import strictModeException from './strictMode'
+import missingArgumentException from './missingArgumentException'
 import operationNotAllowedException from './operationNotAllowedException'
+import missingPropertyException from './missingPropertyException'
 
-export default {
-  VALUE_NOT_DEFINED: valueNotDefinedException,
-  NUMBER_FORMAT: numberFormatException,
-  NOT_IN_ARRAY: notInArrayException,
-  NOT_IN_OBJECT: notInObjectException,
-  UNEXPECTED_VALUE: unexpectedValueException,
-  TYPE_ALREADY_EXISTS: typeAlreadyExistsException,
-  MISSING_ARGUMENT: missingArgumentException,
-  STRICT_MODE: strictModeException,
-  OPERATION_NOT_ALLOWED: operationNotAllowedException
+export {
+  genericServerException as GenericServerException,
+  valueNotDefinedException as ValueNotDefinedException,
+  numberFormatException as NumberFormatException,
+  notInArrayException as NotInArrayException,
+  notInObjectException as NotInObjectException,
+  unexpectedValueException as UnexpectedValueException,
+  typeAlreadyExistsException as TypeAlreadyExistsException,
+  missingArgumentException as MissingArgumentException,
+  operationNotAllowedException as OperationNotAllowedException,
+  missingPropertyException as MissingPropertyException
 }
