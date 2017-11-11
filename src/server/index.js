@@ -2,7 +2,7 @@ import http from 'http'
 import https from 'https'
 
 import debug from '../debug'
-import defaultOptions from './defaultOptions'
+import defaultOptions from './options'
 import Router from './router'
 import { EventBus, EventType } from '../events'
 import { createFlowModifiers, returnFlowModifiers } from './flow/modifier'
@@ -57,7 +57,7 @@ export class Server {
   }
 
   set options (options) {
-    this._options = Object.assign(defaultOptions, options || {})
+    this._options = Object.assign(defaultOptions(), options || {})
   }
 
   use (...apps) {

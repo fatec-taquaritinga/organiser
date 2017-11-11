@@ -4,6 +4,7 @@ import { UnexpectedValueException } from '../../exceptions'
 import { retrieve as retrievePersistence, resolveArgumentsInjection } from '../../persistence'
 import { StaticRoutes, RouteNode, generatePath } from './structures'
 import { createFlowModifiers } from '../flow/modifier'
+import { iterate } from '../../utils'
 
 const parametersRegex = /\{(\S+?)\}|\*+/
 const wildcardRegex = /(\(+)(\*{1,2})(\)+)/
@@ -221,11 +222,11 @@ export class Router {
     const endpointPersistence = retrievePersistence(endpoint)
     const persistence = retrievePersistence(instance)
     const response = []
-    utils.iterate(Object.keys(persistence), (functionName) => {
+    iterate(Object.keys(persistence), (functionName) => {
       const method = persistence[functionName]
       const endpointMods = endpointPersistence.modules
       const methodMods = method.modules
-      utils.iterate(method.types, (httpMethod) => {
+      iterate(method.types, (httpMethod) => {
         const path = generatePath(endpointPersistence.path || '/', method.path || '/')
         const data = Object.freeze({
           path,

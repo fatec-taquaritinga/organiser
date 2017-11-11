@@ -1,12 +1,16 @@
 
 ---
 
+> _**Disclaimer:** This is a **work in progress** version. It must not be used in production and it is not safe even for development. Organiser is still a work in progress. Methods and behavior can change along the way._
+
+---
+
 <div align="center">
   <img src="https://raw.githubusercontent.com/fatec-taquaritinga/organiser/master/media/logo.svg?sanitize=true" alt="OrganiserJS Beta" /><br />
 </div>
 <div align="center">
 
-[![v1.0.0 - Beta](https://img.shields.io/badge/release-1.0.0-lightgrey.svg?style=flat)](https://www.npmjs.com/package/organiser) [![Beta stage - Not safe for production](https://img.shields.io/badge/stage-beta-orange.svg?style=flat)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Beta) [![StandardJS](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat)](https://standardjs.com/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/fatec-taquaritinga/organiser/master/LICENSE) [![Stars on Github](https://img.shields.io/github/stars/fatec-taquaritinga/organiser.svg?style=social)](https://github.com/fatec-taquaritinga/organiser)
+[![v1.1.0 - WIP](https://img.shields.io/badge/WIP-1.1.0-red.svg?style=flat)](https://www.npmjs.com/package/organiser) [![Beta stage - Not safe for production](https://img.shields.io/badge/stage-beta-orange.svg?style=flat)](https://en.wikipedia.org/wiki/Software_release_life_cycle#Beta) [![StandardJS](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat)](https://standardjs.com/) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/fatec-taquaritinga/organiser/master/LICENSE) [![Stars on Github](https://img.shields.io/github/stars/fatec-taquaritinga/organiser.svg?style=social)](https://github.com/fatec-taquaritinga/organiser)
 </div>
 <div align="center">
 
@@ -324,4 +328,4 @@ Licensed under [MIT](https://github.com/fatec-taquaritinga/organiser/blob/master
 
 ---
 
-> _**Disclaimer:** Organiser is still a work in progress. Methods and behavior can change along the way._
+> _**Disclaimer:** This is a **work in progress** version. It must not be used in production and it is not safe for development. Organiser is still a work in progress. Methods and behavior can change along the way._
