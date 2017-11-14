@@ -1,10 +1,9 @@
 import { OperationNotAllowedException } from '../exceptions'
 import { parseHeaders } from '../utils'
 
-export function buildContext (instance, request, response, requestedAt) {
+export function buildContext (instance, request, response, requestedAt, query) {
   const data = Object.seal({
-    query: undefined,
-    url: undefined,
+    query,
     headers: parseHeaders(request.headers),
     body: {},
     store: {}

@@ -155,13 +155,14 @@ class FlowModifier {
     return !!j
   }
 
-  async execute (context, r) {
+  async execute (context, cancelOnResponse, r) {
     if (this.length > 0) {
+      let run = true
       let response
       let i = -1
       let modifier
-      while ((response === undefined) && (modifier = this[++i])) {
-        response = await modifier(context, r)
+      while (run && (modifier = this[++i])) {
+        if ((response = await modifier(context, r)) !== undefined && cancelOnResponse) run = false
       }
       return response
     }

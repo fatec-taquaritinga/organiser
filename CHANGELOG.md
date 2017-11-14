@@ -9,6 +9,12 @@
 
 # Changelog
 
+###### 1.1.0 (Beta)
+
+- Created definition of [Flow].
+- Tree-based router.
+- Refactored request management.
+
 ###### 1.0.1 (Beta)
 
 - Fixed serving static files as response.
