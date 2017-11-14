@@ -11,7 +11,7 @@
 
 ###### 1.1.0 (Beta)
 
-- Created definition of [Flow].
+- Created definition of [Flow](./docs/en-us/Flow.md).
 - Tree-based router.
 - Refactored request management.
 
