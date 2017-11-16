@@ -16,11 +16,19 @@ export const ServerStatus = {
   SERVER_SHUTDOWN: 'SERVER_SHUTDOWN'
 }
 
+function onResponseFinished (i) {
+  this.removeListener('finish', onResponseFinished)
+  this.removeListener('error', onResponseFinished)
+  console.log('onResponseFinished')
+  console.log('this:', this)
+  console.log('i:', i)
+}
+
 export class Server {
   constructor (options) {
     const requestHandler = (request, response) => {
-      request.on('finish', this.onResponseFinished)
-      request.on('error', this.onResponseFinished)
+      request.on('finish', onResponseFinished)
+      request.on('error', onResponseFinished)
       flow(this, request, response, process.hrtime())
     }
     this._start = process.hrtime()
@@ -30,21 +38,15 @@ export class Server {
     this._router = new Router()
     this._status = ServerStatus.SERVER_CLOSE
     this._nodeServer = this._options.https ? https.createServer(this._options.https, requestHandler) : http.createServer(requestHandler)
-    this._nodeServer.on('clientError', this.onClientError)
+    this._nodeServer.on('clientError', (err, socket) => this.onClientError(err, socket))
   }
 
   _onEndpointNotFound () {
     return Response.notFound().build()
   }
 
-  onResponseFinished (i) {
-    console.log('onResponseFinished')
-    console.log('this:', this)
-    console.log('i:', i)
-  }
-
   onClientError (err, socket) {
-    if (err) {
+    if (err && !this._options.internal.silentClientError) {
       debug.log.error(err)
     }
     socket.end()
@@ -117,7 +119,7 @@ export class Server {
             return
           }
           const diff = process.hrtime(this._start)
-          const e = EventType.SERVER_STATUS_UPDATE_EVENT(ServerStatus.SERVER_OPEN, `(${((diff[0] * 1000000000) + diff[1]) / 1000000000}s) ${this._options.name} is up and running at ${this._options.host}:${this._options.port}.`)
+          const e = EventType.SERVER_STATUS_UPDATE_EVENT(ServerStatus.SERVER_OPEN, `\n(${((diff[0] * 1000000000) + diff[1]) / 1000000000}s) ${this._options.name} is up and running at ${this._options.host}:${this._options.port}.`)
           this.emitEvent(e)
           if (e.isCancelled()) {
             this.close().then((serverStatus) => resolve(serverStatus))

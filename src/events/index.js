@@ -1,6 +1,6 @@
 import EventType from './types'
-import { resolveInstance } from '../injections'
-import utils from '../utils'
+import { resolveInstance } from '../persistence'
+import { iterate } from '../utils'
 
 export { EventType }
 export { EventHandler } from './decorator'
@@ -68,7 +68,7 @@ export class EventBus {
     const type = typeof eventType
     if (type === 'string') {
       const arr = this[eventType]
-      if (arr) utils.iterate(arr, listener => e ? listener(e) : listener())
+      if (arr) iterate(arr, listener => e ? listener(e) : listener())
     } else if (type === 'object' && eventType._eventType) {
       this.emit(eventType._eventType, eventType)
     }

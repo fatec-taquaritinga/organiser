@@ -54,6 +54,7 @@ export class Router {
   }
 
   _handleEnd (response, status, header, object, encoding, onEnd) {
+    if (response.finished) return
     response.writeHead(status, header)
     response.end(typeof object === 'object' ? JSON.stringify(object) : object, encoding || 'utf8', onEnd)
   }
@@ -104,7 +105,7 @@ export class Router {
         const data = Object.freeze({
           path,
           method: httpMethod,
-          modules: createFlowModifiers([...(endpointMods ? endpointMods.after : []), ...(methodMods ? methodMods.after : [])], [...(endpointMods ? endpointMods.before : []), ...(methodMods ? methodMods.before : [])]),
+          modifiers: createFlowModifiers([...(endpointMods ? endpointMods.after : []), ...(methodMods ? methodMods.after : [])], [...(endpointMods ? endpointMods.before : []), ...(methodMods ? methodMods.before : [])]),
           resolver: Object.freeze({
             controller: instance,
             persistence,

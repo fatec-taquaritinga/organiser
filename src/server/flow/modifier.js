@@ -4,8 +4,8 @@ import debug from '../../debug'
 
 export function createFlowModifiers (after = [], before = []) {
   return Object.seal({
-    after: new FlowModifier(...after),
-    before: new FlowModifier(...before)
+    after: after.length > 0 ? new FlowModifier(...after) : undefined,
+    before: before.length > 0 ? new FlowModifier(...before) : undefined
   })
 }
 
@@ -16,19 +16,21 @@ export function returnFlowModifiers (parent, children) {
       if (children) {
         for (let value of children) {
           const obj = value._modifiers || value
+          const flowModifier = obj.after ? obj.after : (obj.after = new FlowModifier())
           if (len === 2 && !isNaN(children[0])) {
-            obj.after.register(children[0], children[1])
+            flowModifier.register(children[0], children[1])
           } else {
-            for (let mod of modifiers) obj.after.register(mod)
+            for (let mod of modifiers) flowModifier.register(mod)
           }
         }
       } else {
         const obj = parent._modifiers || parent
         const first = children[0]
+        const flowModifier = obj.after ? obj.after : (obj.after = new FlowModifier())
         if (len === 2 && !isNaN(first)) {
-          obj.after.register(first, children[1])
+          flowModifier.register(first, children[1])
         } else {
-          for (let mod of modifiers) obj.after.register(mod)
+          for (let mod of modifiers) flowModifier.register(mod)
         }
       }
       return this
@@ -38,24 +40,26 @@ export function returnFlowModifiers (parent, children) {
       if (children) {
         for (let value of children) {
           const obj = value._modifiers || value
+          const flowModifier = obj.before ? obj.before : (obj.before = new FlowModifier())
           if (len === 2 && !isNaN(children[0])) {
-            obj.before.register(children[0], children[1])
+            flowModifier.register(children[0], children[1])
           } else {
             let index = len
             while (--index >= 0) {
-              obj.before.register(0, modifiers[index])
+              flowModifier.register(0, modifiers[index])
             }
           }
         }
       } else {
         const obj = parent._modifiers || parent
         const first = children[0]
+        const flowModifier = obj.before ? obj.before : (obj.before = new FlowModifier())
         if (len === 2 && !isNaN(first)) {
-          obj.before.register(first, children[1])
+          flowModifier.register(first, children[1])
         } else {
           let index = len
           while (--index >= 0) {
-            obj.before.register(0, modifiers[index])
+            flowModifier.register(0, modifiers[index])
           }
         }
       }
@@ -111,23 +115,17 @@ class FlowModifier {
     const len = mod.length
     let obj = mod
     if (len === 2) { // connect style (request, next)
-      obj = (context) => {
-        return new Promise((resolve) => {
-          mod(context.request, resolve)
-        })
-      }
+      obj = (context) => new Promise((resolve) => {
+        mod(context.request, resolve)
+      })
     } else if (len === 3) { // connect style (request, response, next)
-      obj = (context) => {
-        return new Promise((resolve) => {
-          mod(context.request, context.response, resolve)
-        })
-      }
+      obj = (context) => new Promise((resolve) => {
+        mod(context.request, context.response, resolve)
+      })
     } else if (len > 3) { // connect style (err, request, response, next)
-      obj = (context) => {
-        return new Promise((resolve, reject) => {
-          mod(err => reject(err), context.request, context.response, resolve)
-        })
-      }
+      obj = (context) => new Promise((resolve, reject) => {
+        mod(err => reject(err), context.request, context.response, resolve)
+      })
     }
     index = index === -1 ? this.length++ : index
     if (!replace && this[index] !== undefined) this._allocate(index, index + 1)
@@ -137,9 +135,7 @@ class FlowModifier {
   indexOf (mod) {
     let i = -1
     let j
-    while ((j = this[++i]) !== undefined) {
-      if (j && j.original === mod) break
-    }
+    while ((j = this[++i]) !== undefined && j.original !== mod) {}
     return j ? i : -1
   }
 

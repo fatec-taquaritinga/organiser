@@ -2,26 +2,26 @@ import 'babel-polyfill'
 import { Types, transform } from '../enums/types'
 import { ParamTypes } from '../enums/paramTypes'
 
-export const resolveRequestArguments = function (context, resolver, params) {
-  const data = context.data
+export const resolveRequestArguments = function (data, resolver, params) {
   const method = resolver.persistence[resolver.method]
   const requestedArgs = method.args
-  if (requestedArgs && Object.keys(requestedArgs)[0] !== undefined) {
-    const resolve = resolveModel(requestedArgs, method.strict, {
-      path: params,
-      query: data.query,
-      body: data.body || {},
-      context
-    }, null)
-    return resolve
+  if (requestedArgs) {
+    const requestedArgsKeys = Object.keys(requestedArgs)
+    if (requestedArgsKeys[0] !== undefined) {
+      const resolve = resolveModel(requestedArgs, requestedArgsKeys, method.strict, {
+        path: params,
+        query: data ? data.url.query : {},
+        body: data ? data.body : {}
+      }, null)
+      return resolve
+    }
   }
 }
 
-function resolveModel (model, strictMode, data, parentWhere = null) {
+function resolveModel (model, modelKeys, strictMode, data, parentWhere = null) {
   // TODO strict mode
   // + needs to check inner models
   const response = {}
-  const modelKeys = Object.keys(model)
   let i = -1
   let propertyName
   let property
@@ -52,18 +52,16 @@ function resolveModel (model, strictMode, data, parentWhere = null) {
             body: value
           }
         }
-        value = resolveModel(model, strictMode, modelData, parameter.where)
+        value = resolveModel(model, Object.keys(model), strictMode, modelData, parameter.where)
       } else {
         value = model
       }
     } else if (parameter.isModel && !value && !isValidValue(value)) { // if there is no value, then this property is probably a general model
       value = parameter.type()
-      if (typeof value === 'object') value = resolveModel(value, strictMode, data, retrieveDefaultParamType(propertyValue))
+      if (typeof value === 'object') value = resolveModel(value, Object.keys(value), strictMode, data, retrieveDefaultParamType(propertyValue))
     // TODO array implementation
     } else if (parameter.type && value) {
       value = transform(value, parameter.type)
-    } else if ((parameter.type === Types.CLIENT_REQUEST || parameter.type === Types.SERVER_RESPONSE) && !value) {
-      value = transform(data.context, parameter.type)
     }
     if (value === undefined && !parameter.isOptinal) {
       throw new Error('Value is not optional.')

@@ -1,6 +1,6 @@
 import debug from '../debug'
 import { iterate, isRequired } from '../utils'
-import { createFlowModifiers } from '../server/flow/modifier'
+import { createFlowModifiers, FlowModifier } from '../server/flow/modifier'
 
 const instances = {}
 
@@ -30,8 +30,8 @@ function persistMethods (persistence, property) {
   })))
 }
 
-function persistModules (persistence) {
-  return persistence.modules || (persistence.modules = createFlowModifiers())
+function persistModifiers (persistence) {
+  return persistence.modifiers || (persistence.modifiers = createFlowModifiers())
 }
 
 export function retrieve (target) {
@@ -73,13 +73,13 @@ export function handleArguments (target, property, descriptor, args) {
   }
 }
 
-export function handleModules (target, property, descriptor, modules, before) {
-  if (modules.length === 0) isRequired('modules')
+export function handleModifiers (target, property, descriptor, modifiers, before) {
+  if (modifiers.length === 0) isRequired('modifiers')
   debug.assert.exists(target, target.name || target)
-  const mods = persistModules(descriptor ? persistMethods(persist(target), property) : persist(target))
-  const chain = before ? mods.before : mods.after
-  iterate(modules, (mod) => {
-    chain.push(mod)
+  const mods = persistModifiers(descriptor ? persistMethods(persist(target), property) : persist(target))
+  const chain = before ? (mods.before || (mods.before = new FlowModifier())) : (mods.after || (mods.after = new FlowModifier()))
+  iterate(modifiers, (mod) => {
+    chain.register(mod)
   })
 }
 

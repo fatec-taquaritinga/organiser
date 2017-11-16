@@ -69,10 +69,8 @@ export class RouterStorage {
         if (segment && segment.isGlobal) break
       }
       node.data(method, data)
-      console.log(`(${method}) dynamic registered: ${path}`)
     } else {
       this._static.set(path, method, data)
-      console.log(`(${method}) static registered: ${path}`)
     }
   }
 

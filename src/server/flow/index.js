@@ -4,47 +4,65 @@ import { buildContext } from '../context'
 import { resolveRequestArguments } from '../../injections'
 import debug from '../../debug'
 
-function onEnd (method, input, timing) {
-  return () => {
+function createContext (instance, request, response, requestedAt, pathname, query) {
+  let context
+  return (retrieve) => retrieve ? context : (context || (context = buildContext(instance, request, response, requestedAt, { pathname, query })))
+}
+
+function onEnd (hasDebug, method, input, timing) {
+  return hasDebug ? () => {
     const diff = process.hrtime(timing)
     debug.log.info(`(${method}): ${input}`)
     debug.log.info(`Request processed in ${diff[0]}s ${diff[1] / 1000000}ms.`)
-  }
+  } : undefined
 }
 
 export const flow = async function (instance, request, response, requestedAt) {
-  const instanceModifiers = instance._modifiers
+  const serverModifiers = instance._modifiers
   // run server (before) modifiers
-  await instanceModifiers.before.execute()
-  // route parsing
+  const serverBefore = serverModifiers.before
+  if (serverBefore) {
+    await serverBefore.execute()
+  }
+  // parse route
   const router = instance._router
   const url = request.url
   const parsed = parseUrl(url, false)
-  const input = parsed.pathname.replace(/\/{2,}/g, '/')
-  const route = router.find(input, request.method)
+  const pathname = parsed.pathname.replace(/\/{2,}/g, '/')
+  const route = router.find(pathname, request.method)
+  let final
+  let context = createContext(instance, request, response, requestedAt, pathname, parsed.query)
   if (route) {
     const routeData = route.data
-    const routeModules = routeData.modules
-    const context = buildContext(instance, request, response, requestedAt, parsed.query)
-    // run controller (before) modifiers
-    let final = await routeModules.before.execute(context, true)
-    if (final === undefined) {
-      const resolver = routeData.resolver
-      const args = resolveRequestArguments(context, resolver, route.params)
-      // run controller method
-      final = await resolver.controller[resolver.method](args)
-      // run controller (after) modifiers
-      const controllerAfter = await routeModules.after.execute(context, false, final)
-      if (controllerAfter !== undefined) final = controllerAfter
+    const routeModifiers = routeData.modifiers
+    // run route (before) modifiers
+    const routeBefore = routeModifiers.before
+    if (routeBefore) {
+      final = await routeBefore.execute(context(), true)
     }
-    // run server (after) modifiers
-    const serverAfter = await instanceModifiers.after.execute(context, false, final)
-    if (serverAfter !== undefined) final = serverAfter
-    router.terminate(response, final, instance.options.internal.debug ? onEnd(request.method, input, requestedAt) : undefined)
+    if (final === undefined) {
+      // method resolver
+      const resolver = routeData.resolver
+      const ctx = context(true)
+      const args = resolveRequestArguments(ctx ? ctx.data : undefined, resolver, route.params)
+      final = await resolver.controller[resolver.method](args)
+      // run route (after) modifiers
+      const routeAfter = routeModifiers.after
+      if (routeAfter) {
+        const after = await routeAfter.execute(context(), true)
+        if (after) final = after
+      }
+    }
   } else {
-    let final = instance._onEndpointNotFound(input, request)
-    const serverAfter = await instanceModifiers.after.execute()
-    if (serverAfter !== undefined) final = serverAfter
-    router.terminate(response, final)
+    // route not found
+    final = instance._onEndpointNotFound()
   }
+  // run server (after) modifiers
+  const serverAfter = serverModifiers.after
+  if (serverAfter) {
+    const after = await (final !== undefined ? serverAfter.execute(context(), false, final) : serverAfter.execute())
+    if (after) final = after
+  }
+  // send final response
+  router.terminate(response, final, onEnd(instance.options.internal.debug, request.method, pathname, requestedAt))
 }

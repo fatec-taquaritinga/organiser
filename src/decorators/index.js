@@ -1,4 +1,4 @@
-import { handleArguments, handlePath, handleHttpMethod, handleModules } from '../persistence'
+import { handleArguments, handlePath, handleHttpMethod, handleModifiers } from '../persistence'
 
 export function Arguments (...args) {
   return (target, property, descriptor) => handleArguments(target, property, descriptor, args)
@@ -9,11 +9,11 @@ export function Path (path) {
 }
 
 export function ModulesAfter (...modules) {
-  return (target, property, descriptor) => handleModules(target, property, descriptor, modules, false)
+  return (target, property, descriptor) => handleModifiers(target, property, descriptor, modules, false)
 }
 
 export function ModulesBefore (...modules) {
-  return (target, property, descriptor) => handleModules(target, property, descriptor, modules, true)
+  return (target, property, descriptor) => handleModifiers(target, property, descriptor, modules, true)
 }
 
 export function GET (target, property, descriptor) {

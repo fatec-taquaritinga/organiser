@@ -4,7 +4,8 @@ export default function () {
     host: process.env.HOST || 'localhost',
     port: process.env.PORT || 3000,
     internal: {
-      debug: process.env.DEBUG || false
+      debug: process.env.DEBUG || false,
+      silentClientError: true
     }
   }
 }

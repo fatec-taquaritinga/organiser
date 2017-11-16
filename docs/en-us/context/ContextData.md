@@ -11,10 +11,10 @@
 
 This is an object that is shared among all modifiers, through the Context object of a request.
 
-**query**
+**url**
 
 Type: `object`
-Parsed request's query.
+Parsed request's URL.
 
 **headers**
 
