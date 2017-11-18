@@ -1,0 +1,49 @@
+{
+  "name": "organiser-build",
+  "version": "1.0.0",
+  "description": "Utility to build Organise packages",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard --verbose | snazzy && node tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatec-taquaritinga/organiser.git"
+  },
+  "keywords": [
+    "organiser",
+    "build",
+    "builder"
+  ],
+  "author": "Arthur A. Bergamaschi <arthurbergmz@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fatec-taquaritinga/organiser/issues"
+  },
+  "homepage": "https://github.com/fatec-taquaritinga/organiser#readme",
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.0.0-beta.32",
+    "babel-eslint": "^8.0.2",
+    "eslint": "^4.11.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0-beta.32",
+    "colors": "^1.1.2",
+    "fs-extra": "^4.0.2",
+    "globby": "^7.0.0",
+    "ora": "^1.3.0"
+  },
+  "files": [
+    "index.js",
+    "logging",
+    "package.json",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ]
+}
