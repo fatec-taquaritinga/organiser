@@ -1,4 +1,4 @@
-const expectedResponse = require('../expectedResponse')()
+const expectedResponse = require('../expectedResponse')
 
 class Foo {
   constructor (message) {

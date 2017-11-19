@@ -5,9 +5,20 @@ const path = require('path')
 const ora = require('ora')
 const colors = require('colors/safe')
 const log = require('./logging')
+const babelrc = require('./babelrc.json')
 
 function getOptions (path) {
   return JSON.parse(fs.readFileSync(path, { encoding: 'utf8' }))
+}
+
+function formatName (name) {
+  let n = ''
+  const spaces = name.split('-')
+  for (let i = 0, j = spaces.length, k = j - 1; i < j; ++i) {
+    const fragment = spaces[i]
+    n += fragment[0].toUpperCase() + fragment.substring(1) + (i === k ? '' : ' ')
+  }
+  return n
 }
 
 function parseOptions (options) {
@@ -21,15 +32,16 @@ function parseOptions (options) {
       log.error(new Error('Parameter "options" must be an object or path.'), 2)
     }
   }
-  return getOptions(path.join(__dirname, '.babelrc'))
+  return babelrc
 }
 
-function run (root, version, options) {
+function run (root, name, version, options) {
+  name = formatName(name)
   const srcDirectory = path.join(root, 'src')
   const distDirectory = path.join(root, 'dist')
   const loading = ora({
     color: 'cyan',
-    text: 'Building Organiser...',
+    text: 'Building ' + name + '...',
     spinner: 'line'
   })
   const transform = (file) => {
@@ -41,7 +53,7 @@ function run (root, version, options) {
   const onComplete = (files) => {
     return new Promise((resolve) => {
       loading.stop()
-      log.success('Organiser was built successfully!')
+      log.success(name + ' was built successfully!')
       const len = files.length
       log.print(len + ' file(s) were transformed.')
       let fragment
@@ -59,12 +71,12 @@ function run (root, version, options) {
   }
   const onError = (err) => {
     loading.stop()
-    log.warning('An error occurred while building Organiser.')
-    log.error(err.errno === undefined ? err.message : ('(' + err.errno + ') ' + err.message))
+    log.warning('An error occurred while building ' + name + '.')
+    log.error(err)
     log.blank()
   }
   log.blank()
-  log.info('Organiser' + colors.grey(version === undefined ? '[version not found]' : (' v' + version)))
+  log.info(name + ' ' + colors.grey(version === undefined ? '[version not found]' : (isNaN(version[0]) ? ('[' + version + ']') : ('v' + version))))
   log.blank()
   loading.start()
   return fs.remove(distDirectory).then(() => globby('**/*.js', { cwd: srcDirectory })).then((files) => Promise.all(files.map(transform)).then(onComplete).catch(onError))
@@ -74,6 +86,6 @@ module.exports = function (root, options) {
   if (!root) log.error(new Error('Parameter "root" is required.'), 1)
   options = parseOptions(options)
   const pkg = require(path.join(root, 'package.json'))
-  if (!pkg) log.error(new Error('File "package.json" was not found!'), 1)
-  return run(root, pkg.version, options)
+  if (!pkg) log.error(new Error('File "package.json" was not found.'), 1)
+  return run(root, pkg.name, pkg.version, options)
 }

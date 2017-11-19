@@ -1,7 +1,7 @@
 {
   "name": "organiser-build",
   "version": "1.0.0",
-  "description": "Utility to build Organise packages",
+  "description": "Utility to build Organiser packages.",
   "main": "index.js",
   "scripts": {
     "test": "standard --verbose | snazzy && node tests/index.js"
@@ -41,6 +41,7 @@
   "files": [
     "index.js",
     "logging",
+    "babelrc.json",
     "package.json",
     "LICENSE",
     "README.md",

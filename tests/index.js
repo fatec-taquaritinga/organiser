@@ -1,6 +1,6 @@
 const log = require('../logging')
 const builder = require('../index')
-const expectedResponse = require('./expectedResponse')()
+const expectedResponse = require('./expectedResponse')
 const colors = require('colors/safe')
 const fs = require('fs-extra')
 const path = require('path')
@@ -17,10 +17,12 @@ builder(__dirname).then(() => {
   log.print('Expected: ' + colors.white(expectedResponse))
   log.print('Received: ' + colors.white(result))
   log.blank()
-
   if (result && result === expectedResponse) {
     log.success('Test passed.')
   } else {
     log.warning('Test failed.')
   }
+}).catch((err) => {
+  log.warning('Test failed.')
+  if (err) log.error(err)
 })
