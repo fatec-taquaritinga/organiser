@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import HttpStatus from './status'
 import MediaType from './mediaType'
 import serveStatic from './static'

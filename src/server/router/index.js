@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import { Response } from '../../response'
 import { UnexpectedValueException } from '../../exceptions'
 import { retrieve as retrievePersistence, resolveArgumentsInjection } from '../../persistence'

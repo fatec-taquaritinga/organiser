@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import { Types, transform } from '../enums/types'
 import { ParamTypes } from '../enums/paramTypes'
 

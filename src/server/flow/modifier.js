@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import { UnexpectedValueException } from '../../exceptions'
 import debug from '../../debug'
 

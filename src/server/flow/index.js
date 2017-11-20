@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import { parse as parseUrl } from 'fast-url-parser'
 import { buildContext } from '../context'
 import { resolveRequestArguments } from '../../injections'
