@@ -7,9 +7,7 @@ const colors = require('colors/safe')
 const log = require('./logging')
 const babelrc = require('./babelrc.json')
 
-function getOptions (path) {
-  return JSON.parse(fs.readFileSync(path, { encoding: 'utf8' }))
-}
+const defaultEncoding = { encoding: 'utf8' }
 
 function formatName (name) {
   let n = ''
@@ -27,7 +25,7 @@ function parseOptions (options) {
     if (optionsType === 'object') {
       return options
     } else if (optionsType === 'string') {
-      return getOptions(options)
+      return JSON.parse(fs.readFileSync(path, defaultEncoding))
     } else {
       log.error(new Error('Parameter "options" must be an object or path.'), 2)
     }
@@ -45,7 +43,7 @@ function run (root, name, version, options) {
     spinner: 'line'
   })
   const transform = (file) => {
-    return fs.readFile(path.join(srcDirectory, file), { encoding: 'utf8' })
+    return fs.readFile(path.join(srcDirectory, file), defaultEncoding)
     .then((content) => {
       return fs.outputFile(path.join(distDirectory, file), babel.transform(content, options).code).then(() => file)
     })
