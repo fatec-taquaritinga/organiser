@@ -1,4 +1,8 @@
-declare module 'organiser' {
+// Type definitions for webpack-pwa-manifest 2.0.4
+// Project: https://github.com/arthurbergmz/webpack-pwa-manifest
+// Definitions by: Arthur A. Bergamaschi <https://www.github.com/arthurbergmz>
+
+declare module "organiser-next" {
 
   export function GET ();
   
@@ -31,7 +35,7 @@ declare module 'organiser' {
     export function rawBodyParser(): (context: object) => void;
   }
 
-  export class ResponseBuilder {
+  class ResponseBuilder {
     constructor(statusCode: number, mediaType: string, entity: object | string);
     build(): Response;
     status(status: number);

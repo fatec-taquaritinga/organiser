@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "allowJs": true,
-    "checkJs": true
+    /* Basic Options */
+    "target": "es2017",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
+    "module": "es2015",                       /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "allowJs": true,                          /* Allow javascript files to be compiled. */
+    "checkJs": true,                          /* Report errors in .js files. */
+    /* Strict Type-Checking Options */
+    "strict": true,                           /* Enable all strict type-checking options. */
+    /* Experimental Options */
+    "experimentalDecorators": true            /* Enables experimental support for ES7 decorators. */
   },
-  "exclude": [
-    "node_modules"
+  "include": [
+    "src/**.js",
+    "typings/**.js"
   ]
 }

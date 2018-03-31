@@ -3,4 +3,3 @@ node_modules/
 dist/
 .vscode/
 npm-debug.log*
-package-lock.json

@@ -7,7 +7,7 @@ import { Router } from './router'
 import { EventBus, EventType } from '../events'
 import { createFlowModifiers, returnFlowModifiers } from './flow/modifier'
 import { Response } from '../response'
-import { flow } from './flow'
+import flow from './flow'
 
 export const ServerStatus = {
   SERVER_CLOSE: 'SERVER_CLOSE',
@@ -19,9 +19,6 @@ export const ServerStatus = {
 function onResponseFinished (i) {
   this.removeListener('finish', onResponseFinished)
   this.removeListener('error', onResponseFinished)
-  console.log('onResponseFinished')
-  console.log('this:', this)
-  console.log('i:', i)
 }
 
 export class Server {

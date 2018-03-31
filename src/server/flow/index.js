@@ -16,7 +16,7 @@ function onEnd (hasDebug, method, input, timing) {
   } : undefined
 }
 
-export const flow = async function (instance, request, response, requestedAt) {
+export default async function (instance, request, response, requestedAt) {
   const serverModifiers = instance._modifiers
   // run server (before) modifiers
   const serverBefore = serverModifiers.before

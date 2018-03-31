@@ -9,6 +9,9 @@
       }
     ]
   ],
+  "plugins": [
+    ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": false }]
+  ],
   "sourceMaps": true,
   "retainLines": true,
   "comments": false

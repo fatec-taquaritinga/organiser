@@ -1,11 +1,23 @@
-export { Server, ServerStatus } from './server'
+import { Server, ServerStatus } from './server'
 
-export { Modules } from './modules'
+import { Modules } from './modules'
 
-export * from './decorators'
+import { Response, MediaType, HttpStatus } from './response'
 
-export * from './enums'
+import * as Decorators from './decorators'
 
-export { Response, MediaType, HttpStatus } from './response'
+import * as Enums from './enums'
 
-export * from './events'
+import * as Events from './events'
+
+module.exports = {
+  Server,
+  ServerStatus,
+  Modules,
+  Response,
+  MediaType,
+  HttpStatus,
+  ...Decorators,
+  ...Enums,
+  ...Events
+}
