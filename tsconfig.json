@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2018",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
+    "allowJs": true,                          /* Allow javascript files to be compiled. */
+    "checkJs": true,                          /* Report errors in .js files. */
+    /* Strict Type-Checking Options */
+    "strict": true,                           /* Enable all strict type-checking options. */
+    /* Experimental Options */
+    "experimentalDecorators": true            /* Enables experimental support for ES7 decorators. */
+  },
+  "include": [
+    "src/**.js",
+    "typings/index.d.ts"
+  ]
+}

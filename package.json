@@ -1,0 +1,77 @@
+{
+  "name": "organiser",
+  "version": "2.0.0",
+  "description": "An organic web framework for organized web servers.",
+  "keywords": [
+    "server",
+    "mvc",
+    "framework",
+    "web",
+    "rest",
+    "api",
+    "restful",
+    "static",
+    "serve",
+    "app",
+    "router",
+    "application",
+    "spring",
+    "boot",
+    "organiser",
+    "organizer",
+    "organic",
+    "organized",
+    "promise",
+    "async",
+    "await",
+    "modular",
+    "graphql",
+    "json",
+    "response",
+    "send",
+    "upload"
+  ],
+  "main": "index.js",
+  "types": "typings/index.d.ts",
+  "scripts": {
+    "build": "standard --verbose | snazzy && node build/index.js",
+    "test": "standard --verbose | snazzy && echo \"Error: no tests specified yet. (WIP)\" && exit 1"
+  },
+  "author": "Arthur A. Bergamaschi <arthurbergmz@gmail.com>",
+  "license": "MIT",
+  "standard": {
+    "ignore": [
+      "node_modules",
+      "dist",
+      "typings",
+      "media",
+      "docs",
+      ".vscode"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatec-taquaritinga/organiser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fatec-taquaritinga/organiser/issues"
+  },
+  "homepage": "https://github.com/fatec-taquaritinga/organiser#readme",
+  "devDependencies": {
+    "organiser-build": "^1.0.0"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "engineStrict": true,
+  "files": [
+    "dist",
+    "typings",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "index.js",
+    "package.json",
+    "package-lock.json"
+  ]
+}
