@@ -1,7 +1,7 @@
-const server = require('./server')
+const objects = require('./objects')
 
 const _default = {
-  ...server
+  objects
 }
 
 module.exports = _default
