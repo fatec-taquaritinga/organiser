@@ -1,12 +1,18 @@
-const objectUtils = require('../utils').objects
+const _ = require('../../utils').objects
 
 const _default = {
-  minProperties: ['_instances'],
-  getMissingProperties: function (obj) {
-    return objectUtils.getMissingProperties(obj, this.minProperties)
+  formatName: function (serverName, serverId) {
+    return serverName.replace('{id}', serverId)
   },
-  isValid: function (obj) {
-    return objectUtils.isMissingProperties(obj, this.minProperties)
+  encapsuleConfig: function (config) {
+    const name = _.getNotEmptyProperty(config, 'name', 'Server #{id}')
+    const hostname = _.getNotEmptyProperty(config, 'hostname', 'localhost')
+    const port = _.getIntFromProperty(config, 'port', 8080)
+    return Object.freeze({
+      name,
+      hostname,
+      port
+    })
   }
 }
 
