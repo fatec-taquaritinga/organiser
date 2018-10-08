@@ -1,6 +1,7 @@
 const availableCPUs = require('os').cpus().length
-const { scaffold: _, httpType: HttpType } = require('./common')
+const { scaffold: _, httpType: HttpType, errorHandler } = require('./common')
 
+const Panic = require('../exceptions/panic')
 const InvalidParameterValueException = require('../exceptions/server/invalidParameterValueException')
 
 class Scaffold {
@@ -8,6 +9,10 @@ class Scaffold {
     this._config = _.encapsuleConfig(config)
     this._remainingClusters = availableCPUs
     this._instanceCount = 0
+  }
+
+  errorHandler (node) {
+    return errorHandler(this, node)
   }
 
   canSpawn () {
